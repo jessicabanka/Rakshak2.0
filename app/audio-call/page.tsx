@@ -15,7 +15,7 @@ export default function AudioCallPage() {
   const handleAudioPlay = (index: number) => {
     // Stop all other audio tracks
     audioRefs.current.forEach((audio, i) => {
-      if (i !== index) {
+      if (i !== index && audio) {
         audio?.pause();
         audio.currentTime = 0; // Reset the audio to the beginning
       }

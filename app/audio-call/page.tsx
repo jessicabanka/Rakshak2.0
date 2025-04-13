@@ -44,7 +44,9 @@ export default function AudioCallPage() {
           >
             <h2 className="text-xl font-semibold mb-4">{audio.name}</h2>
             <audio
-              ref={(el) => (audioRefs.current[index] = el)} // Save reference to the audio element
+              ref={(el) => {
+                audioRefs.current[index] = el;
+              }} // Save reference to the audio element
               controls
               className="w-full"
               onPlay={() => handleAudioPlay(index)} // Handle audio play event

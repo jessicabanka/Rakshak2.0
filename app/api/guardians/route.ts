@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../auth/[...nextauth]/route';
+import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/prisma';
-
+console.log("📡 Guardians API route loaded");
 export async function GET(req: NextRequest) {
   const session = await getServerSession({ req, ...authOptions }); // ✅ pass in req
 

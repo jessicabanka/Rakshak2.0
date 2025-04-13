@@ -3,7 +3,19 @@
 import React, { useState, useEffect } from 'react';
 import Cart from './Cart';
 
-const products = [
+// Define types
+type Product = {
+  id: number;
+  name: string;
+  price: number;
+  image: string;
+};
+
+type CartItem = Product & {
+  quantity: number;
+};
+
+const products: Product[] = [
   { id: 1, name: 'Pepper Spray', price: 254, image: '/img/pepper-spray.webp' },
   { id: 2, name: 'Self-Defense Keychain', price: 305, image: '/img/keychain.jpg' },
   { id: 3, name: 'Tactical Flashlight', price: 695, image: '/img/flashlight.webp' },
@@ -11,61 +23,54 @@ const products = [
 ];
 
 export default function ShopPage() {
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // Fetch cart from localStorage after the component is mounted
+  // Load cart from localStorage
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem('cart');
-      if (stored) {
-        setCart(JSON.parse(stored));
-      }
-      setLoading(false); // Set loading to false once the cart data is loaded
+    const stored = localStorage.getItem('cart');
+    if (stored) {
+      setCart(JSON.parse(stored));
     }
+    setLoading(false);
   }, []);
 
-  // Update localStorage whenever cart changes
+  // Update localStorage when cart changes
   useEffect(() => {
     if (!loading) {
       localStorage.setItem('cart', JSON.stringify(cart));
     }
   }, [cart, loading]);
 
-  const handleAddToCart = (product) => {
-    // Check if the product already exists in the cart
+  const handleAddToCart = (product: Product) => {
     const existingProduct = cart.find((item) => item.id === product.id);
 
     if (existingProduct) {
-      // If the product is already in the cart, update its quantity
       setCart((prev) =>
         prev.map((item) =>
           item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 } // Increase quantity
+            ? { ...item, quantity: item.quantity + 1 }
             : item
         )
       );
     } else {
-      // If the product isn't in the cart, add it with quantity 1
       setCart((prev) => [...prev, { ...product, quantity: 1 }]);
     }
   };
 
-  const handleRemoveFromCart = (id) => {
+  const handleRemoveFromCart = (id: number) => {
     const productToRemove = cart.find((item) => item.id === id);
 
     if (productToRemove && productToRemove.quantity > 1) {
-      // If the quantity is greater than 1, decrease the quantity
       setCart((prev) =>
         prev.map((item) =>
           item.id === id
-            ? { ...item, quantity: item.quantity - 1 } // Decrease quantity
+            ? { ...item, quantity: item.quantity - 1 }
             : item
         )
       );
     } else {
-      // If the quantity is 1, remove the product entirely
       setCart((prev) => prev.filter((item) => item.id !== id));
     }
   };
@@ -74,7 +79,6 @@ export default function ShopPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white px-6 py-10 relative">
-      {/* Heading */}
       <h1 className="text-4xl md:text-5xl font-bold text-center mb-10 text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500">
         Self-Defense Tools
       </h1>
